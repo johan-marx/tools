@@ -10,6 +10,7 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
+  import { base } from '$app/paths'; // Import the base path
 </script>
 
 <div class="flex min-h-screen w-full flex-col">
@@ -17,11 +18,11 @@
     <nav
       class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
     >
-      <a href="##" class="flex items-center gap-2 text-lg font-semibold md:text-base">
+      <a href="{base}/" class="flex items-center gap-2 text-lg font-semibold md:text-base">
         <Calculator class="h-6 w-6" />
         <span class="sr-only">Tools</span>
       </a>
-      <a href="/maf-180" class="text-foreground transition-colors hover:text-foreground">
+      <a href="{base}/maf-180" class="text-foreground transition-colors hover:text-foreground">
         MAF 180
       </a>
     </nav>
@@ -34,11 +35,11 @@
       </Sheet.Trigger>
       <Sheet.Content side="left">
         <nav class="grid gap-6 text-lg font-medium">
-          <a href="##" class="flex items-center gap-2 text-lg font-semibold">
+          <a href="{base}/" class="flex items-center gap-2 text-lg font-semibold">
             <Calculator class="h-6 w-6" />
             <span class="sr-only">Tools</span>
           </a>
-          <a href="/maf-180" class="hover:text-foreground"> MAF 180 </a>
+          <a href="{base}/maf-180" class="hover:text-foreground"> MAF 180 </a>
         </nav>
       </Sheet.Content>
     </Sheet.Root>
