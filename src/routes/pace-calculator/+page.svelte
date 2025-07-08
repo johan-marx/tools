@@ -552,7 +552,7 @@
       {#if calculationType === 'time' && formattedCalculatedTime}
         <h1 class="scroll-m-20 text-2xl font-light tracking-tight lg:text-3xl">Your time</h1>
         <h1 class="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
-          {formattedCalculatedTime} per {unit}
+          {formattedCalculatedTime}
         </h1>
       {/if}
 
