@@ -22,6 +22,12 @@
         <Calculator class="h-6 w-6" />
         <span class="sr-only">Tools</span>
       </a>
+      <a
+        href="{base}/pace-calculator"
+        class="text-foreground transition-colors hover:text-foreground"
+      >
+        Pace Calculator
+      </a>
       <a href="{base}/maf-180" class="text-foreground transition-colors hover:text-foreground">
         MAF 180
       </a>
