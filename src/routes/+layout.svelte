@@ -31,6 +31,12 @@
       <a href="{base}/maf-180" class="text-foreground transition-colors hover:text-foreground">
         MAF 180
       </a>
+      <a
+        href="{base}/triphasic-training"
+        class="text-foreground transition-colors hover:text-foreground"
+      >
+        Triphasic Training
+      </a>
     </nav>
     <Sheet.Root>
       <Sheet.Trigger asChild let:builder>
@@ -45,7 +51,9 @@
             <Calculator class="h-6 w-6" />
             <span class="sr-only">Tools</span>
           </a>
+          <a href="{base}/pace-calculator" class="hover:text-foreground"> Pace Calculator </a>
           <a href="{base}/maf-180" class="hover:text-foreground"> MAF 180 </a>
+          <a href="{base}/triphasic-training" class="hover:text-foreground"> Triphasic Training </a>
         </nav>
       </Sheet.Content>
     </Sheet.Root>
