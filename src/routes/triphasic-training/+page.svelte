@@ -9,6 +9,7 @@
   let goalHours = $state('');
   let goalMinutes = $state('');
   let goalSeconds = $state('');
+  let selectedPhaseFilter = $state('all');
 
   let validationError = $state('');
   let calculatedResults = $state<any[]>([]);
@@ -27,6 +28,17 @@
     '1600m': { label: '1600m', km: 1.6, mi: 0.99419 },
     '1500m': { label: '1500m', km: 1.5, mi: 0.93206 }
   };
+
+  const phaseFilters = [
+    { value: 'all', label: 'All' },
+    { value: 'base_speed', label: 'Base Speed' },
+    { value: 'support_speed', label: 'Support Speed' },
+    { value: 'specific_speed', label: 'Specific Speed' },
+    { value: 'race_pace', label: 'Race Pace' },
+    { value: 'specific_endurance', label: 'Specific Endurance' },
+    { value: 'support_endurance', label: 'Support Endurance' },
+    { value: 'base_endurance', label: 'Base Endurance' }
+  ];
 
   function timeToSeconds(hours: string, minutes: string, seconds: string): number {
     return (parseInt(hours) || 0) * 3600 + (parseInt(minutes) || 0) * 60 + (parseInt(seconds) || 0);
@@ -59,28 +71,68 @@
     }
   }
 
-  function getCategoryAndColor(percent: number): { category: string; color: string } {
+  function getCategoryInfo(percent: number): { 
+    category: string; 
+    categoryKey: string;
+    borderColor: string;
+    badgeClass: string;
+  } {
     if (percent >= 115 && percent <= 120) {
-      return { category: 'Base Training Speed', color: 'rgb(78, 193, 78)' };
+      return { 
+        category: 'Base Training Speed', 
+        categoryKey: 'base_speed',
+        borderColor: 'border-l-green-500',
+        badgeClass: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+      };
     } else if (percent >= 106 && percent <= 114) {
-      return { category: 'Support Training Speed', color: 'rgb(24, 133, 235)' };
+      return { 
+        category: 'Support Training Speed', 
+        categoryKey: 'support_speed',
+        borderColor: 'border-l-blue-500',
+        badgeClass: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+      };
     } else if (percent >= 101 && percent <= 105) {
-      return { category: 'Specific Training Speed', color: 'rgb(232, 232, 102)' };
+      return { 
+        category: 'Specific Training Speed', 
+        categoryKey: 'specific_speed',
+        borderColor: 'border-l-amber-500',
+        badgeClass: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+      };
     } else if (percent === 100) {
-      return { category: 'Race Pace', color: 'rgb(255, 215, 0)' };
+      return { 
+        category: 'Race Pace', 
+        categoryKey: 'race_pace',
+        borderColor: 'border-l-primary',
+        badgeClass: 'bg-primary/10 text-primary font-semibold'
+      };
     } else if (percent >= 95 && percent <= 99) {
-      return { category: 'Specific Training Endurance', color: 'rgb(232, 232, 102)' };
+      return { 
+        category: 'Specific Training Endurance', 
+        categoryKey: 'specific_endurance',
+        borderColor: 'border-l-amber-500',
+        badgeClass: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+      };
     } else if (percent >= 86 && percent <= 94) {
-      return { category: 'Support Training Endurance', color: 'rgb(24, 133, 235)' };
+      return { 
+        category: 'Support Training Endurance', 
+        categoryKey: 'support_endurance',
+        borderColor: 'border-l-blue-500',
+        badgeClass: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+      };
     } else {
-      return { category: 'Base Training Endurance', color: 'rgb(78, 193, 78)' };
+      return { 
+        category: 'Base Training Endurance', 
+        categoryKey: 'base_endurance',
+        borderColor: 'border-l-green-500',
+        badgeClass: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+      };
     }
   }
 
   function shouldShowCategoryLabel(percent: number, prevPercent: number | null): boolean {
     if (prevPercent === null) return true;
-    const current = getCategoryAndColor(percent);
-    const previous = getCategoryAndColor(prevPercent);
+    const current = getCategoryInfo(percent);
+    const previous = getCategoryInfo(prevPercent);
     return current.category !== previous.category;
   }
 
@@ -113,15 +165,18 @@
       const pacePerKm = secondsToTimeString(pacePerKmSeconds);
       const pacePerMi = secondsToTimeString(pacePerMiSeconds);
       
-      const { category, color } = getCategoryAndColor(percent);
+      const categoryInfo = getCategoryInfo(percent);
       const showCategory = shouldShowCategoryLabel(percent, prevPercent);
       
       results.push({
         percent,
         pacePerKm,
         pacePerMi,
-        category: showCategory ? category : '',
-        color
+        category: categoryInfo.category,
+        categoryKey: categoryInfo.categoryKey,
+        showCategoryLabel: showCategory,
+        borderColor: categoryInfo.borderColor,
+        badgeClass: categoryInfo.badgeClass
       });
       
       prevPercent = percent;
@@ -147,9 +202,21 @@
     validationError = '';
     calculatedResults = [];
     racePaceSummary = '';
+    selectedPhaseFilter = 'all';
   }
 
   const isCustomDistance = $derived(selectedDistance === 'custom');
+  
+  const filteredResults = $derived(
+    calculatedResults.filter(result => {
+      if (selectedPhaseFilter === 'all') return true;
+      return result.categoryKey === selectedPhaseFilter;
+    })
+  );
+
+  const showRacePaceSummary = $derived(
+    racePaceSummary && (selectedPhaseFilter === 'all' || selectedPhaseFilter === 'race_pace')
+  );
 </script>
 
 <div class="col-span-1 space-y-2 md:space-y-8">
@@ -250,7 +317,7 @@
 </div>
 
 <div class="col-span-1 space-y-2 md:space-y-8">
-  {#if racePaceSummary}
+  {#if showRacePaceSummary}
     <div class="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
       <h2 class="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl mb-4">
         Race Pace Summary
@@ -264,26 +331,45 @@
       <h2 class="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl mb-4">
         Training Paces
       </h2>
+      
+      <div class="mb-4">
+        <Label class="mb-2 block text-sm font-medium">Filter by Phase</Label>
+        <div class="flex flex-wrap gap-2">
+          {#each phaseFilters as filter}
+            <Button
+              variant={selectedPhaseFilter === filter.value ? 'default' : 'outline'}
+              size="sm"
+              on:click={() => (selectedPhaseFilter = filter.value)}
+            >
+              {filter.label}
+            </Button>
+          {/each}
+        </div>
+      </div>
+
       <div class="overflow-x-auto">
         <table class="w-full border-collapse">
           <thead>
-            <tr class="border-b">
-              <th class="p-2 text-left font-semibold">%</th>
-              <th class="p-2 text-left font-semibold">Pace/km</th>
-              <th class="p-2 text-left font-semibold">Pace/mi</th>
-              <th class="p-2 text-left font-semibold">Category</th>
+            <tr class="border-b border-border">
+              <th class="p-3 text-left text-sm font-semibold text-muted-foreground">%</th>
+              <th class="p-3 text-left text-sm font-semibold text-muted-foreground">Pace/km</th>
+              <th class="p-3 text-left text-sm font-semibold text-muted-foreground">Pace/mi</th>
+              <th class="p-3 text-left text-sm font-semibold text-muted-foreground">Category</th>
             </tr>
           </thead>
           <tbody>
-            {#each calculatedResults as result}
-              <tr
-                class="border-b hover:bg-gray-50 dark:hover:bg-gray-700"
-                style="background-color: {result.color}; opacity: 0.7;"
-              >
-                <td class="p-2 font-medium">{result.percent}%</td>
-                <td class="p-2">{result.pacePerKm}</td>
-                <td class="p-2">{result.pacePerMi}</td>
-                <td class="p-2 font-semibold">{result.category}</td>
+            {#each filteredResults as result}
+              <tr class="border-b border-border hover:bg-muted/50 transition-colors border-l-4 {result.borderColor}">
+                <td class="p-3 font-medium">{result.percent}%</td>
+                <td class="p-3 font-mono text-sm">{result.pacePerKm}</td>
+                <td class="p-3 font-mono text-sm">{result.pacePerMi}</td>
+                <td class="p-3">
+                  {#if result.showCategoryLabel}
+                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium {result.badgeClass}">
+                      {result.category}
+                    </span>
+                  {/if}
+                </td>
               </tr>
             {/each}
           </tbody>
