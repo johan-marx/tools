@@ -15,7 +15,7 @@ Calculate your Maximum Aerobic Function heart rate based on the MAF 180 Formula 
 **Route:** `/maf-180`
 
 ### Triphasic Training Paces Calculator
-Calculate training paces based on your goal race time using the triphasic training system. The percentage bands and formula follow [Andrew Snow / Run Elite's Training Paces Calculator](https://www.runelitebook.com/calculator).
+Calculate training paces based on your goal race time using the triphasic training system. Inspired by Andrew Snow's Run Elite triphasic model ([runelitebook.com](https://www.runelitebook.com/)).
 
 **Route:** `/triphasic-training`
 
@@ -24,14 +24,11 @@ Calculate training paces based on your goal race time using the triphasic traini
 - Custom distance input (km, miles, or meters)
 - Goal time entry (HH:MM:SS)
 - Complete pace table from 120% (fastest) to 80% (slowest)
-- Color-coded training phases:
-  - **Base Training Speed** (120%-115%) - Green
-  - **Support Training Speed** (114%-106%) - Blue
-  - **Specific Training Speed** (105%-101%) - Yellow
-  - **Race Pace** (100%) - Gold
-  - **Specific Training Endurance** (99%-95%) - Yellow
-  - **Support Training Endurance** (94%-86%) - Blue
-  - **Base Training Endurance** (85%-80%) - Green
+- Filter by training phase: All, Base, Support, Specific
+- Color-coded phase distinction:
+  - **Base** (120–115% speed / 80–85% endurance) - Green
+  - **Support** (114–106% speed / 86–94% endurance) - Blue
+  - **Specific** (105–101% speed / 95–99% endurance + 100% race pace) - Amber/Gold
 - Both per-kilometer and per-mile paces displayed
 
 **Usage Example:**
@@ -39,6 +36,10 @@ Calculate training paces based on your goal race time using the triphasic traini
 2. Enter goal time: 3 hours, 0 minutes, 0 seconds
 3. Click "Calculate"
 4. View your race pace (4:16/km or 6:52/mi) and all training paces
+5. Filter by phase to focus on specific training zones
+
+**Training Guidance:**
+The tool includes practical guidance on how to use the paces in each phase of a race-focused training block. Base establishes the foundation (mostly easy running with strides), Support builds the ladder toward race pace with structured quality work, and Specific assembles race-like sessions.
 
 ## Developing
 
