@@ -2,6 +2,10 @@
 
 A collection of web-based calculators for runners, built with SvelteKit and Tailwind CSS.
 
+## Home Page
+
+Visit the home route (`/`) to see a catalogue of all available tools with descriptions and quick links.
+
 ## Available Tools
 
 ### Pace Calculator
