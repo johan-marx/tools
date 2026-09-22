@@ -31,13 +31,9 @@
 
   const phaseFilters = [
     { value: 'all', label: 'All' },
-    { value: 'base_speed', label: 'Base Speed' },
-    { value: 'support_speed', label: 'Support Speed' },
-    { value: 'specific_speed', label: 'Specific Speed' },
-    { value: 'race_pace', label: 'Race Pace' },
-    { value: 'specific_endurance', label: 'Specific Endurance' },
-    { value: 'support_endurance', label: 'Support Endurance' },
-    { value: 'base_endurance', label: 'Base Endurance' }
+    { value: 'base', label: 'Base' },
+    { value: 'support', label: 'Support' },
+    { value: 'specific', label: 'Specific' }
   ];
 
   function timeToSeconds(hours: string, minutes: string, seconds: string): number {
@@ -73,56 +69,56 @@
 
   function getCategoryInfo(percent: number): { 
     category: string; 
-    categoryKey: string;
+    phase: string;
     borderColor: string;
     badgeClass: string;
   } {
     if (percent >= 115 && percent <= 120) {
       return { 
         category: 'Base Training Speed', 
-        categoryKey: 'base_speed',
+        phase: 'base',
         borderColor: 'border-l-green-500',
         badgeClass: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
       };
     } else if (percent >= 106 && percent <= 114) {
       return { 
         category: 'Support Training Speed', 
-        categoryKey: 'support_speed',
+        phase: 'support',
         borderColor: 'border-l-blue-500',
         badgeClass: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
       };
     } else if (percent >= 101 && percent <= 105) {
       return { 
         category: 'Specific Training Speed', 
-        categoryKey: 'specific_speed',
+        phase: 'specific',
         borderColor: 'border-l-amber-500',
         badgeClass: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
       };
     } else if (percent === 100) {
       return { 
         category: 'Race Pace', 
-        categoryKey: 'race_pace',
+        phase: 'specific',
         borderColor: 'border-l-primary',
         badgeClass: 'bg-primary/10 text-primary font-semibold'
       };
     } else if (percent >= 95 && percent <= 99) {
       return { 
         category: 'Specific Training Endurance', 
-        categoryKey: 'specific_endurance',
+        phase: 'specific',
         borderColor: 'border-l-amber-500',
         badgeClass: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
       };
     } else if (percent >= 86 && percent <= 94) {
       return { 
         category: 'Support Training Endurance', 
-        categoryKey: 'support_endurance',
+        phase: 'support',
         borderColor: 'border-l-blue-500',
         badgeClass: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
       };
     } else {
       return { 
         category: 'Base Training Endurance', 
-        categoryKey: 'base_endurance',
+        phase: 'base',
         borderColor: 'border-l-green-500',
         badgeClass: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
       };
@@ -173,7 +169,7 @@
         pacePerKm,
         pacePerMi,
         category: categoryInfo.category,
-        categoryKey: categoryInfo.categoryKey,
+        phase: categoryInfo.phase,
         showCategoryLabel: showCategory,
         borderColor: categoryInfo.borderColor,
         badgeClass: categoryInfo.badgeClass
@@ -210,12 +206,12 @@
   const filteredResults = $derived(
     calculatedResults.filter(result => {
       if (selectedPhaseFilter === 'all') return true;
-      return result.categoryKey === selectedPhaseFilter;
+      return result.phase === selectedPhaseFilter;
     })
   );
 
   const showRacePaceSummary = $derived(
-    racePaceSummary && (selectedPhaseFilter === 'all' || selectedPhaseFilter === 'race_pace')
+    racePaceSummary && (selectedPhaseFilter === 'all' || selectedPhaseFilter === 'specific')
   );
 </script>
 
@@ -224,11 +220,12 @@
     Triphasic Training Paces Calculator
   </h1>
   <p class="leading-7 [&:not(:first-child)]:mt-6">
-    Calculate training paces based on your goal race time. The percentage bands and formula follow <a
-      href="https://www.runelitebook.com/calculator"
+    Calculate training paces based on your goal race time. Inspired by Andrew Snow's Run Elite
+    triphasic model (<a
+      href="https://www.runelitebook.com/"
       target="_blank"
-      class="underline">Andrew Snow / Run Elite's Training Paces Calculator</a
-    >.
+      class="underline">runelitebook.com</a
+    >).
   </p>
 
   <div class="space-y-4 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
@@ -312,6 +309,55 @@
     <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
       <Button on:click={calculate}>Calculate</Button>
       <Button variant="outline" on:click={clearAll}>Clear All</Button>
+    </div>
+  </div>
+
+  <div class="space-y-4 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
+    <h2 class="scroll-m-20 text-2xl font-bold tracking-tight">How to Use This in Training</h2>
+    
+    <div class="space-y-3 text-sm leading-relaxed">
+      <div>
+        <h3 class="font-semibold mb-1">Timeline</h3>
+        <p class="text-muted-foreground">
+          A typical race-focused block runs <strong>~18 weeks</strong>: 6 weeks Base + 6 weeks Support + 6 weeks Specific, 
+          with speed and endurance work converging on race pace by race day. Base can (and often should) run longer than 6 weeks — 
+          extending for months before the structured Support→Specific race push.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-1">Base Phase (120–115% speed / 80–85% endurance)</h3>
+        <p class="text-muted-foreground">
+          Mostly subjectively easy running. The base % bands are <strong>speed limits / ceilings</strong>, not hard prescriptions — 
+          stay easy for the day's fatigue and weather. Include strides and hill sprints; later in a long base, lightly introduce 
+          informal speed or short tempos without peaking.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-1">Support Phase (114–106% speed / 86–94% endurance)</h3>
+        <p class="text-muted-foreground">
+          Emphasize <strong>Support Speed (~106–114%)</strong> and <strong>Support Endurance (~86–94%)</strong> as the main quality work — 
+          building the ladder toward race pace without living at it yet.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-1">Specific Phase (105–101% speed / 95–99% endurance / 100% race pace)</h3>
+        <p class="text-muted-foreground">
+          Emphasize <strong>Specific Speed (~101–105%)</strong>, <strong>Race Pace (100%)</strong>, and 
+          <strong>Specific Endurance (~95–99%)</strong> — race-like sessions that assemble the race you want.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-1">Planning Tip</h3>
+        <p class="text-muted-foreground">
+          Work from current fitness toward the goal; progress volume, extension, and recovery over weeks within a phase. 
+          Pair harder sessions with enough easy days. Calculator paces are most useful for prescribing Support and Specific work; 
+          Base stays feel-based.
+        </p>
+      </div>
     </div>
   </div>
 </div>
