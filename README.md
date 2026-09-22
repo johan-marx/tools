@@ -1,49 +1,33 @@
 # Running & Training Tools
 
-A collection of web-based calculators for runners, built with SvelteKit and Tailwind CSS.
+Running calculators built with SvelteKit.
 
-## Home Page
+## Tools
 
-Visit the home route (`/`) to see a catalogue of all available tools with descriptions and quick links.
-
-## Available Tools
+Visit `/` for an index of available tools.
 
 ### Pace Calculator
-Calculate your pace, time, or distance for running workouts in both miles and kilometers.
+Calculate pace, time, or distance.
 
 **Route:** `/pace-calculator`
 
-### MAF 180 Calculator
-Calculate your Maximum Aerobic Function heart rate based on the MAF 180 Formula developed by Dr. Phil Maffetone.
+### MAF 180
+Calculate Maximum Aerobic Function heart rate.
 
 **Route:** `/maf-180`
 
-### Triphasic Training Paces Calculator
-Calculate training paces based on your goal race time using the triphasic training system. Inspired by Andrew Snow's Run Elite triphasic model ([runelitebook.com](https://www.runelitebook.com/)).
+### Triphasic Training
+Calculate training paces for Base, Support, and Specific phases. Based on Andrew Snow's Run Elite triphasic model ([runelitebook.com](https://www.runelitebook.com/)).
 
 **Route:** `/triphasic-training`
 
 **Features:**
-- Distance presets: Marathon, Half Marathon, 15K, 10K, 5K, and more
-- Custom distance input (km, miles, or meters)
-- Goal time entry (HH:MM:SS)
-- Complete pace table from 120% (fastest) to 80% (slowest)
-- Filter by training phase: All, Base, Support, Specific
-- Color-coded phase distinction:
-  - **Base** (120–115% speed / 80–85% endurance) - Green
-  - **Support** (114–106% speed / 86–94% endurance) - Blue
-  - **Specific** (105–101% speed / 95–99% endurance + 100% race pace) - Amber/Gold
-- Both per-kilometer and per-mile paces displayed
-
-**Usage Example:**
-1. Select "Marathon" distance
-2. Enter goal time: 3 hours, 0 minutes, 0 seconds
-3. Click "Calculate"
-4. View your race pace (4:16/km or 6:52/mi) and all training paces
-5. Filter by phase to focus on specific training zones
-
-**Training Guidance:**
-The tool includes practical guidance on how to use the paces in each phase of a race-focused training block. Base establishes the foundation (mostly easy running with strides), Support builds the ladder toward race pace with structured quality work, and Specific assembles race-like sessions.
+- Distance presets (Marathon, Half Marathon, 15K, 10K, 5K, etc.) or custom distance
+- Goal time input (HH:MM:SS)
+- Pace table from 120% down to 80%
+- Filter by phase: All, Base, Support, Specific
+- Displays per-km and per-mi paces
+- Includes training guidance for each phase
 
 ## Developing
 
